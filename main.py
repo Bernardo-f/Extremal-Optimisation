@@ -14,14 +14,11 @@ def ruleta(c):
     print(aux)
     return aux
 
-#Calcula la probabilidad que tiene un individuo en el torneo
-def arrayTorneo(arrayFitness,numCiudades):
-    arrayTorneo = np.empty(numCiudades)
-    acc = 0
-    for i in range(0,numCiudades):
-        acc = acc + arrayFitness[i]
-        arrayTorneo[i] = acc
-    return arrayTorneo
+#Se obtiene el indice de un individuo de la poblacion randomicamente segun la probabilidad de cruza
+def getIndexTorneo(random, arrayProbCruza):
+    for i in range(0, n):
+        if random <= arrayProbCruza[i]:
+            return i
 
 
 def High_Heuristica():
@@ -39,12 +36,8 @@ def High_Heuristica():
     ## heuristica
     heuristica = np.argsort(heuristica[0])  ## ordernar de menor a mayot por indice
     cut = np.where(heuristica == first) ## buscar indice de corte
-    print("cru", cut)
-    size_cut = int(np.size(out[0]))
-    print("order-index",heuristica,size_cut,first)
+    size_cut = int(np.size(out[0])) ## rango del corte
     heuristica = np.delete(heuristica,heuristica[cut[0][0]:cut[0][0]+size_cut])
-    print(heuristica)
-    print("olf-index",np.append(heuristica,out[0]))
     heuristica = np.append(heuristica,out[0])
 
     return heuristica
@@ -79,12 +72,19 @@ Ruleta = ruleta(n)
 
 solucion = np.random.randint(2,size=n)
 High_Heuristica()
-print("holad")
-while np.sum(solucion*elements[:,1]) > c:
-    print("hola")
-    if verify_weight(solucion):
-        print("hola")
-    else:
-        print("hola")
+print(Ruleta)
 
+
+while True:
+   
+    if verify_weight(solucion):
+        print("finalizado")
+        break
+    else:
+        random = random_0_to_1()
+        index = getIndexTorneo(random,Ruleta)
+        heuristica = High_Heuristica()
+        solucion[heuristica[index]] = 0
+
+print(np.sum(solucion*elements[:,1]),c)
 
