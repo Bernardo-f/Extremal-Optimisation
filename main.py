@@ -15,35 +15,26 @@ def ruleta(c):
     return aux
 
 #Se obtiene el indice de un individuo de la poblacion randomicamente segun la probabilidad de cruza
-def getIndexTorneo(random, arrayProbCruza):
+def getIndexTorneo(random, arrayProb):
     for i in range(0, n):
-        if random <= arrayProbCruza[i]:
+        if random <= arrayProb[i]:
             return i
 
+def first_solution(n,elements):
+    solucion = np.random.randint(2,size=n)
+    print(elements)
+    while not verify_weight(solucion,elements):
+        print(solucion)
+        auxElements = elements
+        auxElements[:,1] = elements[:,1]*solucion
+        auxElements = auxElements[auxElements[:,1].argsort()]
+        solucion[auxElements[len(auxElements)-1][0]-1] = 0
+        solucion[random_int_to_n(n)] = 1
 
-def High_Heuristica():
+    return solucion
 
-    heuristica = [ (np.sum(solucion*elements[:,1]) - elements[:,1])*solucion ] - c
-
-
-    ## descartar los que no estan seleccionados
-    out = np.where(heuristica[0] == (-1*c)) ## indicesseleccionados
-    first = int(out[0][0]) 
-
-
-    ##print( np.sort(heuristica[0]))
-
-    ## heuristica
-    heuristica = np.argsort(heuristica[0])  ## ordernar de menor a mayot por indice
-    cut = np.where(heuristica == first) ## buscar indice de corte
-    size_cut = int(np.size(out[0])) ## rango del corte
-    heuristica = np.delete(heuristica,heuristica[cut[0][0]:cut[0][0]+size_cut])
-    heuristica = np.append(heuristica,out[0])
-
-    return heuristica
-
-
-def verify_weight(solucion):
+def verify_weight(solucion,elements):
+    print(np.sum(solucion*elements[:,1]))
     if np.sum(solucion*elements[:,1]) <= c:
         return True
     else:
@@ -69,22 +60,11 @@ elements = np.genfromtxt(archivo_entrada, delimiter=",",skip_header=5,max_rows=n
 
 print("n:",n," c:",c)
 Ruleta = ruleta(n)
-
-solucion = np.random.randint(2,size=n)
-High_Heuristica()
-print(Ruleta)
+solucion = first_solution(n,elements)
+print(solucion)
 
 
-while True:
-   
-    if verify_weight(solucion):
-        print("finalizado")
-        break
-    else:
-        random = random_0_to_1()
-        index = getIndexTorneo(random,Ruleta)
-        heuristica = High_Heuristica()
-        solucion[heuristica[index]] = 0
 
-print(np.sum(solucion*elements[:,1]),c)
+
+
 
