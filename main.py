@@ -33,40 +33,42 @@ def first_solution(n,elements):
 
 def verify_weight(solucion,elements):
     # print(np.sum(solucion*elements[:,1]))
-    if np.sum(solucion*elements[:,1]) <= c:
+    if np.sum(solucion*elements[:,2]) <= c:
         return True
     else:
         return False
 
 def calculateFitness(array):
-    arrayPrecio = array * elements[:,1]
-    arrayPrecio = arrayPrecio[np.where(arrayPrecio!=0)]
-    return np.sum(arrayPrecio)
+    return np.sum(array * elements[:,1])
    
-    
-
 def solve():
     i = 0
     # Calcula precio/peso y los ordena de menor a mayor ( numero mayor es mejor , numero menor es peor)
-    auxElements = elementsFloat.copy()
-    auxElements[:,1] = (elements[:,2]/elements[:,1])
+    auxElements = elements.copy()
+    auxElements[:,1] = (elements[:,1]/elements[:,2])
     auxElements = auxElements[auxElements[:,1].argsort()]
+    print(auxElements)
     fitnessValue = 0
     bestSolucionArray = arraySolucion
     bestSolucionFitness = calculateFitness(arraySolucion)
-    while i < iteraciones and fitnessValue <= c:
+    print("best array inicial", bestSolucionArray)
+    print("best fitness inicial", bestSolucionFitness)
+    while i < iteraciones and fitnessValue < z:
         indexObtenido = getIndexTorneo(random_0_to_1(), Ruleta)
-        if(arraySolucion[indexObtenido] == 0):
-            arraySolucion[indexObtenido] = 1
+        pos = auxElements[indexObtenido][0] - 1
+        if(arraySolucion[pos] == 0):
+            arraySolucion[pos] = 1
             if(not verify_weight(arraySolucion, elements)):
-                arraySolucion[indexObtenido] = 0
+                arraySolucion[pos] = 0
         else:
-            arraySolucion[indexObtenido] = 0
+            arraySolucion[pos] = 0
         fitnessValue = calculateFitness(arraySolucion)
         if(fitnessValue > bestSolucionFitness):
             bestSolucionArray = arraySolucion.copy()
             bestSolucionFitness = calculateFitness(bestSolucionArray)
+            print("i", i)
         i+=1
+       
     print("best array", bestSolucionArray) 
     print("best fitness", calculateFitness(bestSolucionArray)) 
     
@@ -87,6 +89,11 @@ else:
    print('Formato de argumentos ingresados no es válido: <Nombre archivo de entrada> <Valor semilla> <Número de iteraciones> <Valor de Tau>.')
    exit()
 
+# archivo_entrada = "knapPI_1_50_100000.csv"
+# seed = 10
+# iteraciones = 100
+# tau = 1.4
+
 np.random.seed(seed=seed)
 test = np.genfromtxt(archivo_entrada, delimiter=" ", skip_header=1,max_rows=3,dtype=int,usecols=(1))
 n = test[0] # Cantidad variables
@@ -94,14 +101,15 @@ c = test[1] # Mejor precio
 z = test[2] # Mejor peso
 
 
-
 elements = np.genfromtxt(archivo_entrada, delimiter=",",skip_header=5,max_rows=n,dtype=int,usecols=(0,1,2))
-elementsFloat = np.genfromtxt(archivo_entrada, delimiter=",",skip_header=5,max_rows=n,dtype=float,usecols=(0,1,2))
+
+# elementsFloat = np.genfromtxt(archivo_entrada, delimiter=",",skip_header=5,max_rows=n,dtype=float,usecols=(0,1,2))
 
 
 Ruleta = ruleta(n)
 arraySolucion = first_solution(n,elements)
 solve()
+
 
 
 
