@@ -1,5 +1,6 @@
 import numpy as np 
 import sys
+import pandas as pd
 
 def random_int_to_n(n):
     return np.random.randint(n)
@@ -72,11 +73,6 @@ def solve():
     print("best array", bestSolucionArray) 
     print("best fitness", calculateFitness(bestSolucionArray)) 
     
-     
-   
- 
-
-
 
 # py .\main.py knapPI_1_50_100000.csv 10 10 1.4 
 
@@ -95,29 +91,17 @@ else:
 # tau = 1.4
 
 np.random.seed(seed=seed)
-test = np.genfromtxt(archivo_entrada, delimiter=" ", skip_header=1,max_rows=3,dtype=int,usecols=(1))
-n = test[0] # Cantidad variables
-c = test[1] # Mejor precio
-z = test[2] # Mejor peso
+#test = np.genfromtxt(archivo_entrada, delimiter=" ", skip_header=1,max_rows=3,dtype=int,usecols=(1))
+test = pd.read_csv(archivo_entrada,header=None,delimiter=" ",skiprows=1,nrows=3,usecols=[1]).to_numpy()
+n = test[0][0] # Cantidad variables
+c = test[1][0] # Mejor precio
+z = test[2][0] # Mejor peso
 
-
-elements = np.genfromtxt(archivo_entrada, delimiter=",",skip_header=5,max_rows=n,dtype=int,usecols=(0,1,2))
+#elements = np.genfromtxt(archivo_entrada, delimiter=",",skip_header=5,max_rows=n,dtype=int,usecols=(0,1,2))
+elements = pd.read_csv(archivo_entrada,header=None,skiprows=5,nrows=50,usecols=[0,1,2]).to_numpy()
 
 # elementsFloat = np.genfromtxt(archivo_entrada, delimiter=",",skip_header=5,max_rows=n,dtype=float,usecols=(0,1,2))
-
 
 Ruleta = ruleta(n)
 arraySolucion = first_solution(n,elements)
 solve()
-
-
-
-
-
-
-
-
-
-
-
-
