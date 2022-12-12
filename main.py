@@ -98,7 +98,7 @@ c = test[1][0] # Mejor precio
 z = test[2][0] # Mejor peso
 
 #elements = np.genfromtxt(archivo_entrada, delimiter=",",skip_header=5,max_rows=n,dtype=int,usecols=(0,1,2))
-elements = pd.read_csv(archivo_entrada,header=None,skiprows=5,nrows=50,usecols=[0,1,2]).to_numpy()
+elements = pd.read_csv(archivo_entrada,header=None,skiprows=5,nrows=n,usecols=[0,1,2]).to_numpy()
 
 # elementsFloat = np.genfromtxt(archivo_entrada, delimiter=",",skip_header=5,max_rows=n,dtype=float,usecols=(0,1,2))
 
