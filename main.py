@@ -1,6 +1,7 @@
 import numpy as np 
 import sys
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def random_int_to_n(n):
     return np.random.randint(n)
@@ -8,8 +9,8 @@ def random_int_to_n(n):
 def random_0_to_1():
     return np.random.random()
 
-def ruleta(c):
-    aux = np.arange(1,c+1)**-tau
+def ruleta(c,tau):
+    aux = np.arange(1,c+1)**-tau 
     aux /= np.sum(aux)
     aux = np.cumsum(aux)
     return aux
@@ -42,12 +43,14 @@ def verify_weight(solucion,elements):
 def calculateFitness(array):
     return np.sum(array * elements[:,1])
    
-def solve():
+def solve(tau):
+    list_fitness = []
     i = 0
     # Calcula precio/peso y los ordena de menor a mayor ( numero mayor es mejor , numero menor es peor)
+    Ruleta = ruleta(n,tau)
     auxElements = elements.copy()
     auxElements[:,1] = (elements[:,1]/elements[:,2])
-    auxElements = auxElements[auxElements[:,1].argsort()]
+    auxElements = auxElements[-auxElements[:,1].argsort()]
     print(auxElements)
     fitnessValue = 0
     bestSolucionArray = arraySolucion
@@ -68,10 +71,11 @@ def solve():
             bestSolucionArray = arraySolucion.copy()
             bestSolucionFitness = calculateFitness(bestSolucionArray)
             print("i", i)
+            list_fitness.append(bestSolucionFitness)
         i+=1
-       
     print("best array", bestSolucionArray) 
     print("best fitness", calculateFitness(bestSolucionArray)) 
+    return list_fitness
     
 
 # py .\main.py knapPI_1_50_100000.csv 10 10 1.4 
@@ -102,6 +106,20 @@ elements = pd.read_csv(archivo_entrada,header=None,skiprows=5,nrows=n,usecols=[0
 
 # elementsFloat = np.genfromtxt(archivo_entrada, delimiter=",",skip_header=5,max_rows=n,dtype=float,usecols=(0,1,2))
 
-Ruleta = ruleta(n)
+
 arraySolucion = first_solution(n,elements)
-solve()
+listFiness = []
+tau_inicial = tau
+while tau < 1.9:
+    tau += 0.1
+    listFiness.append(solve(tau))
+
+plt.suptitle('Diagrama')
+plt.xlabel('valor de tau')
+plt.ylabel('Fitness')
+plt.boxplot(listFiness)
+plt.xticks(np.arange(1,len(listFiness)+1),np.arange(tau_inicial,tau-0.1,0.1,dtype=float).round(1))
+plt.show()
+
+
+
