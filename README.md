@@ -29,7 +29,7 @@ Los parámetros de entradas serán de tipo:
 * Nombre archivo de entrada: Variable de tipo `string` con el nombre del archivo .txt que contenga las distancia de las ciudades
 * Valor de la semilla: Generador de los valores aleatorios. (Para una misma semilla se obtendrá siempre los mismos valores aleatorios) Es de cualquier tipo de variable.
 * Número de iteraciones : Variable de tipo `entero` del número de siglos que se representa en la cantidad de generaciones que se van a crear,
-* Valor de tau : valor con la cual se construira la ruleta en distribucion de potencia.
+* Valor de tau : valor con el que se construira la ruleta en distribucion de potencia.
 
 ## Parámetros de salida
 
