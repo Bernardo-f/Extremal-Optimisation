@@ -30,7 +30,6 @@ def first_solution(n,elements):
         auxElements = auxElements[auxElements[:,1].argsort()]
         solucion[auxElements[len(auxElements)-1][0]-1] = 0
         solucion[random_int_to_n(n)] = 1
-
     return solucion
 
 def verify_weight(solucion,elements):
@@ -51,12 +50,14 @@ def solve(tau):
     auxElements = elements.copy()
     auxElements[:,1] = (elements[:,1]/elements[:,2])
     auxElements = auxElements[-auxElements[:,1].argsort()]
-    print(auxElements)
+
+    
     fitnessValue = 0
+    arraySolucion = first_solution(n,elements)
     bestSolucionArray = arraySolucion
     bestSolucionFitness = calculateFitness(arraySolucion)
-    print("best array inicial", bestSolucionArray)
-    print("best fitness inicial", bestSolucionFitness)
+    # print("best array inicial", bestSolucionArray)
+    # print("best fitness inicial", bestSolucionFitness)
     while i < iteraciones and fitnessValue < z:
         indexObtenido = getIndexTorneo(random_0_to_1(), Ruleta)
         pos = auxElements[indexObtenido][0] - 1
@@ -70,11 +71,11 @@ def solve(tau):
         if(fitnessValue > bestSolucionFitness):
             bestSolucionArray = arraySolucion.copy()
             bestSolucionFitness = calculateFitness(bestSolucionArray)
-            print("i", i)
+            # print("i", i)
             list_fitness.append(bestSolucionFitness)
         i+=1
-    print("best array", bestSolucionArray) 
-    print("best fitness", calculateFitness(bestSolucionArray)) 
+    # print("best array", bestSolucionArray) 
+    # print("best fitness", calculateFitness(bestSolucionArray)) 
     return list_fitness
     
 
@@ -107,13 +108,14 @@ elements = pd.read_csv(archivo_entrada,header=None,skiprows=5,nrows=n,usecols=[0
 # elementsFloat = np.genfromtxt(archivo_entrada, delimiter=",",skip_header=5,max_rows=n,dtype=float,usecols=(0,1,2))
 
 
-arraySolucion = first_solution(n,elements)
+
 listFiness = []
 tau_inicial = tau
 while tau < 1.9:
     tau += 0.1
     listFiness.append(solve(tau))
 
+print(listFiness)
 plt.suptitle('Diagrama')
 plt.xlabel('valor de tau')
 plt.ylabel('Fitness')
